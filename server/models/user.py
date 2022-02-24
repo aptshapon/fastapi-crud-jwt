@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from passlib.hash import bcrypt
 
 
 class UserSchema(BaseModel):
