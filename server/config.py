@@ -1,20 +1,21 @@
 from decouple import config
 from pydantic import BaseSettings
+from functools import lru_cache
 
 
 class CommonSettings(BaseSettings):
-    APP_NAME: str = "FastAPI/MongoDB Test CRUD Application"
-    DEBUG_MODE: bool = True
+    app_name: str = "FastAPI/MongoDB Test CRUD Application"
+    debug_mode: bool = True
 
 
 class ServerSettings(BaseSettings):
-    HOST: str = "127.0.0.1"
-    PORT: int = 8000
+    host: str = "127.0.0.1"
+    port: int = 8000
 
 
 class DatabaseSettings(BaseSettings):
-    DB_URL: str = config("db_url")
-    DB_NAME: str = config("db_name")
+    db_url: str = config("db_url")
+    db_name: str = config("db_name")
 
 
 class Settings(CommonSettings, ServerSettings, DatabaseSettings):
@@ -23,6 +24,12 @@ class Settings(CommonSettings, ServerSettings, DatabaseSettings):
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'
+
+
+@lru_cache(maxsize=28)
+def get_settings():
+    print("From caches")
+    return Settings()
 
 
 settings = Settings()

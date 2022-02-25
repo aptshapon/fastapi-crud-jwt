@@ -1,6 +1,9 @@
+from functools import lru_cache
+
 from bson import ObjectId
 
 from server.db.db import student_collection
+from asyncstdlib.functools import lru_cache
 
 
 # helpers
@@ -16,7 +19,9 @@ def student_helper(student) -> dict:
 
 
 # Retrieve all students present in the database
+@lru_cache(maxsize=128)
 async def retrieve_students():
+    print("From Database")
     students = []
     async for student in student_collection.find():
         students.append(student_helper(student))
