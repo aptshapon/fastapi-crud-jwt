@@ -1,3 +1,4 @@
+from bson import ObjectId
 from fastapi import APIRouter
 from server.db.db import user_collection
 from passlib.hash import bcrypt
@@ -32,3 +33,11 @@ async def add_user(user_data: dict) -> dict:
     })
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
+
+
+# Delete a student from the database
+async def delete_user(user_id: str):
+    student = await user_collection.find_one({"_id": ObjectId(user_id)})
+    if student:
+        await user_collection.delete_one({"_id": ObjectId(user_id)})
+        return True

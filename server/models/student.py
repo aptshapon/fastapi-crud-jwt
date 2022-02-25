@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
+from fastapi import status
 
 
 class StudentSchema(BaseModel):
@@ -43,11 +44,11 @@ class UpdateStudentModel(BaseModel):
 
 def response_model(data, message):
     return {
-        "data": [data],
-        "code": 200,
+        "data": data,
+        "code": status.HTTP_200_OK,
         "message": message,
     }
 
 
-def ErrorResponseModel(error, code, message):
+def error_response_model(error, code, message):
     return {"error": error, "code": code, "message": message}

@@ -1,9 +1,7 @@
-import motor.motor_asyncio
-from decouple import config
+from motor.motor_asyncio import AsyncIOMotorClient
+from server.config import settings
 
-
-MONGO_DETAILS = config("db_url")
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
-database = client.students
+client = AsyncIOMotorClient(settings.DB_URL)
+database = client[settings.DB_NAME]
 student_collection = database.get_collection("students_collection")
 user_collection = database.get_collection("users_collection")

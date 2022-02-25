@@ -1,40 +1,43 @@
-from pydantic import BaseModel, EmailStr, Field
-from passlib.hash import bcrypt
+from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 
 class UserSchema(BaseModel):
     name: str = Field(...)
+    username: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
-                "name": "Shapon Sheikh",
-                "email": "shapon@yotech.ltd",
-                "password": "Aa112233"
+                "name": "John Doe",
+                "username": "username",
+                "email": "email@yotech.ltd",
+                "password": "password"
             }
         }
 
 
 class UserLoginSchema(BaseModel):
+    username: str = Field(...)
     email: EmailStr = Field(...)
-    password: str = Field(...)
+    password: SecretStr = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
-                "email": "shapon@yotech.ltd",
-                "password": "Aa112233"
+                "username": "username",
+                "email": "email@yotech.ltd",
+                "password": "password"
             }
         }
 
 
 def user_response_model(data, message):
     return {
-        "data": [data],
+        "data": data,
         "code": 200,
-        "message": message,
+        "message": message
     }
 
 

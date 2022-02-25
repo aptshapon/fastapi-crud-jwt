@@ -1,9 +1,10 @@
 from fastapi import Body, APIRouter
 from fastapi.encoders import jsonable_encoder
 
+from ..models.student import response_model, error_response_model
 from ..models.user import UserSchema, UserLoginSchema, user_response_model
 from ..auth.auth_handler import sign_jwt
-from ..db.user import retrieve_users, add_user
+from ..db.user import retrieve_users, add_user, delete_user
 
 router = APIRouter()
 
@@ -37,3 +38,15 @@ async def user_login(data: UserLoginSchema = Body(...)):
     return {
         "error": "Wrong login details!"
     }
+
+
+@router.delete("/user/{id}", response_description="User data deleted from the database")
+async def delete_user_data(delete_id: str):
+    deleted_user = await delete_user(delete_id)
+    if deleted_user:
+        return response_model(
+            f"Student with ID: {delete_id} removed", "User deleted successfully"
+        )
+    return error_response_model(
+        "An error occurred", 404, f"User with id {delete_id} doesn't exist"
+    )
