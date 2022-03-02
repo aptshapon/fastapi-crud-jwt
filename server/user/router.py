@@ -2,16 +2,14 @@ from fastapi import Body, APIRouter, status
 from fastapi.encoders import jsonable_encoder
 
 from server.auth.jwt import create_access_token
-from server.models.student import response_model, error_response_model
+from server.student.student import response_model, error_response_model
 from server.user.schema import User, user_response_model
 from server.user.models import retrieve_users, add_user, delete_user
 
 router = APIRouter()
 
 
-@router.get(
-    "user/",
-    response_description="Users retrieved",
+@router.get("/", response_model=User, response_description="Users retrieved",
     status_code=status.HTTP_200_OK)
 async def get_users():
     users = await retrieve_users()
@@ -20,8 +18,7 @@ async def get_users():
     return user_response_model(users, "Empty list returned")
 
 
-@router.post(
-    "/user/signup",
+@router.post("/", response_model=User,
     response_description="User data added into the database",
     status_code=status.HTTP_201_CREATED)
 async def add_user_data(user: User = Body(...)):
@@ -33,7 +30,7 @@ async def add_user_data(user: User = Body(...)):
     ]
 
 
-@router.delete("/user/{id}", response_description="User data deleted from the database")
+@router.delete("/{id}", response_description="User data deleted from the database")
 async def delete_user_data(delete_id: str):
     deleted_user = await delete_user(delete_id)
     if deleted_user:

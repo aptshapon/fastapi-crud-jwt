@@ -2,10 +2,11 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from .schema import Token
+from .schema import Token, Login
 
 from ..user import hashing
 from ..user.schema import User, UserInDB
+from server.user import models
 from . import jwt
 
 router = APIRouter()
@@ -19,7 +20,6 @@ def get_user(db, email: str):
 
 def authenticate_user(data, email: str, password: str):
     user = get_user(data, email)
-    print("user:--------:", user)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Invalid Credentials')
     if not hashing.verify_password(password, user.hashed_password):
@@ -27,16 +27,15 @@ def authenticate_user(data, email: str, password: str):
     return user
 
 
-@router.post("/token", response_model=Token)
-async def login_for_access_token(
-        form_data: OAuth2PasswordRequestForm = Depends(),
-        users_db: dict = Depends(get_user)):
-    user = authenticate_user(users_db, form_data.username, form_data.password)
+@router.post("/login", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(models.retrieve_users, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"})
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     access_token_expires = timedelta(minutes=jwt.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = jwt.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires

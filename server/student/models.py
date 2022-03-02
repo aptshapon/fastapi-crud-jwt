@@ -1,5 +1,5 @@
 from bson import ObjectId
-from server.db.db import student_collection
+from server.database.db import student_collection
 
 
 # helpers

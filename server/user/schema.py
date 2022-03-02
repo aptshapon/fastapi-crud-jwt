@@ -2,10 +2,12 @@ from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 
 class User(BaseModel):
-    name: str | None = None
-    email: EmailStr = Field(...)
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
 
     class Config:
+        orm_mode = True,
         schema_extra = {
             "example": {
                 "name": "John Doe",
