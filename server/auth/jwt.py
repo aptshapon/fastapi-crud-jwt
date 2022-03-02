@@ -5,8 +5,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from decouple import config
 
-from .schema import Login, Token, TokenData
-from ..user import router
+from .schema import Token, TokenData
+from ..user import routes
 
 SECRET_KEY = config("secret")
 ALGORITHM = config("algorithm")

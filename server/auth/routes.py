@@ -2,10 +2,10 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from .schema import Token, Login
+from .schema import Token
 
 from ..user import hashing
-from ..user.schema import User, UserInDB
+from ..user.schema import User
 from server.user import models
 from . import jwt
 
@@ -15,7 +15,7 @@ router = APIRouter()
 def get_user(db, email: str):
     if email in db:
         user_dict = db[email]
-        return UserInDB(**user_dict)
+        return User(**user_dict)
 
 
 def authenticate_user(data, email: str, password: str):
@@ -43,6 +43,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/", response_model=User)
+@router.get("/", response_model=User)
 async def read_users_me(current_user: User = Depends(jwt.get_current_user)):
     return current_user

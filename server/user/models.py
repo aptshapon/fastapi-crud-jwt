@@ -1,9 +1,9 @@
 from bson import ObjectId
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from server.database.db import user_collection
 
 from server.user.hashing import get_password_hash
-
+from server.user.schema import User
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ def user_helper(user) -> dict:
 
 
 # Retrieve all users present in the database
-async def retrieve_users():
+async def retrieve_users() -> list[User]:
     users = []
     async for user in user_collection.find():
         users.append(user_helper(user))
@@ -27,7 +27,7 @@ async def retrieve_users():
 
 
 # Add a new user into to the database
-async def add_user(user_data: dict) -> dict:
+async def add_user(user_data: dict) -> User:
     hashed_password = get_password_hash(user_data["password"])
     user = await user_collection.insert_one({
         "name": user_data["name"],

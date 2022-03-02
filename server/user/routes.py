@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=User, response_description="Users retrieved",
-    status_code=status.HTTP_200_OK)
+            status_code=status.HTTP_200_OK)
 async def get_users():
     users = await retrieve_users()
     if users:
@@ -19,8 +19,8 @@ async def get_users():
 
 
 @router.post("/", response_model=User,
-    response_description="User data added into the database",
-    status_code=status.HTTP_201_CREATED)
+             response_description="User data added into the database",
+             status_code=status.HTTP_201_CREATED)
 async def add_user_data(user: User = Body(...)):
     user = jsonable_encoder(user)
     new_user = await add_user(user)

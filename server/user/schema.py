@@ -1,23 +1,30 @@
-from pydantic import BaseModel, EmailStr, Field, SecretStr
+from pydantic import BaseModel, EmailStr, Field, SecretStr, constr
 
 
 class User(BaseModel):
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
+    name: constr(min_length=2, max_length=50)
+    email: EmailStr
+    password: SecretStr
 
     class Config:
         orm_mode = True,
         schema_extra = {
             "example": {
-                "name": "John Doe",
-                "email": "email@yotech.ltd",
+                "name": "Shapon Sheikh",
+                "email": "shapon@yotech.ltd",
+                "password": "password"
             }
         }
 
 
-class UserInDB(User):
-    hashed_password: SecretStr = Field(...)
+
+# class DisplayUser(BaseModel):
+#     id: int
+#     name: str
+#     email: str
+#
+#     class Config:
+#         orm_mode = True
 
 
 def user_response_model(data, message):
