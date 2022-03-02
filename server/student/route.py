@@ -1,17 +1,14 @@
-from functools import lru_cache
-
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
-from server.db.student import (
+from server.student.models import (
     add_student,
     delete_student,
     retrieve_student,
     retrieve_students,
     update_student,
 )
-from server.auth.auth_bearer import JWTBearer
-from server.models.student import (
+from server.student.student import (
     error_response_model,
     response_model,
     StudentSchema,
@@ -37,7 +34,8 @@ async def get_students():
     return response_model(students, "Empty list returned")
 
 
-@router.get("/{id}", dependencies=[Depends(JWTBearer())], response_description="Student data retrieved")
+# @router.get("/{id}", dependencies=[Depends(JWTBearer())], response_description="Student data retrieved")
+@router.get("/{id}", response_description="Student data retrieved")
 async def get_student_data(id):
     student = await retrieve_student(id)
     if student:
@@ -45,7 +43,7 @@ async def get_student_data(id):
     return error_response_model("An error occurred.", 404, "Student doesn't exist.")
 
 
-@router.put("/{id}", dependencies=[Depends(JWTBearer())])
+@router.put("/{id}")
 async def update_student_data(id: str, req: UpdateStudentModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_student = await update_student(id, req)

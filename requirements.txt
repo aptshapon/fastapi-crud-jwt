@@ -5,7 +5,6 @@ pydantic
 pymongo
 pymongo[srv]
 pydantic[email]
-PyJWT
 python-decouple
 python-jose[cryptography]
 passlib[bcrypt]
