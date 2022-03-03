@@ -14,7 +14,7 @@ router = APIRouter()
 async def get_users():
     users = await retrieve_users()
     if users:
-        return user_response_model(users, "Students data retrieved successfully")
+        return user_response_model(users, "Users data retrieved successfully")
     return user_response_model(users, "Empty list returned")
 
 
@@ -34,7 +34,7 @@ async def delete_user_data(delete_id: str):
     deleted_user = await delete_user(delete_id)
     if deleted_user:
         return response_model(
-            f"Student with ID: {delete_id} removed", "User deleted successfully"
+            f"User with ID: {delete_id} removed", "User deleted successfully"
         )
     return error_response_model(
         "An error occurred", 404, f"User with id {delete_id} doesn't exist"
