@@ -9,7 +9,7 @@ app = FastAPI()
 
 app.include_router(student_router, tags=["Student"], prefix="/student")
 app.include_router(user_router, tags=["User"], prefix="/user")
-# app.include_router(auth_router, tags=["Auth"], prefix="/auth")
+app.include_router(auth_router, tags=["Auth"], prefix="/auth")
 
 
 @app.get("/", tags=["Root"])

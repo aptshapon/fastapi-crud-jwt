@@ -19,7 +19,7 @@ def user_helper(user) -> dict:
 
 
 # Retrieve all users present in the database
-async def retrieve_users() -> list[User]:
+async def retrieve_users():
     users = []
     async for user in user_collection.find():
         users.append(user_helper(user))
