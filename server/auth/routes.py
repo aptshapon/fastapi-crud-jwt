@@ -20,7 +20,12 @@ async def login_for_access_token(request: OAuth2PasswordRequestForm = Depends())
     access_token_expires = timedelta(minutes=token.ACCESS_TOKEN_EXPIRE_MINUTES)
     # Generate a JWT token
     access_token = token.create_access_token(
+<<<<<<< HEAD
         data={"sub": user["email"]}, expires_delta=access_token_expires)
+=======
+        data={"sub": user["email"]}, expires_delta=access_token_expires
+    )
+>>>>>>> 9aa1e4d... fixed bugs most of the token, oauth login
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -31,4 +36,8 @@ async def read_users_me(current_user: User = Depends(oauth2.get_current_user)):
 
 @router.get("/me/items/")
 async def read_own_items(current_user: User = Depends(oauth2.get_current_user)):
+<<<<<<< HEAD
     return [{"item_id": "Foo", "owner": current_user.email}]
+=======
+    return [{"item_id": "Foo", "owner": current_user.username}]
+>>>>>>> 9aa1e4d... fixed bugs most of the token, oauth login
